@@ -100,7 +100,7 @@ function App() {
   return (
     <div className="app">
       <header className="app-header">
-        <h1>App Điểm Danh Sự Kiện</h1>
+        <h1>Hội Nghị Công Đoàn - Điểm Danh</h1>
         <ExcelUploader onUpload={handleExcelUpload} />
       </header>
       
