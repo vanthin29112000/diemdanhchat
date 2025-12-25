@@ -75,10 +75,11 @@ function SeatLayout({ attendanceList, scannedCards }) {
             <p>Chưa có dữ liệu chỗ ngồi. Vui lòng tải lên file Excel.</p>
           </div>
         ) : (
-          seats.map((seat) => (
+          seats.map((seat, index) => (
             <div
               key={seat.id}
               className={`seat ${seat.isScanned ? 'seat-scanned' : 'seat-empty'}`}
+              style={{ animationDelay: `${index * 0.02}s` }}
               title={
                 seat.isScanned
                   ? `${seat.personData?.hoTen || seat.person?.hoTen || seat.person?.['Họ và tên'] || ''} - Đã điểm danh`

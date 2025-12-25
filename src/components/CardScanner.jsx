@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import './CardScanner.css'
 
-function CardScanner({ onScan, scannedCards, onRemove }) {
+function CardScanner({ onScan, scannedCards, onRemove, onClearAll }) {
   const [cardCode, setCardCode] = useState('')
   const [currentPerson, setCurrentPerson] = useState(null)
   const inputRef = useRef(null)
@@ -61,30 +61,47 @@ function CardScanner({ onScan, scannedCards, onRemove }) {
         </form>
 
         {currentPerson && (
-          <div className="current-person-card">
-            <h3>Thông tin vừa quét:</h3>
+          <div className="current-person-card animate-success">
+            <h3>✅ Thông tin vừa quét:</h3>
             <div className="person-info">
               <p><strong>Họ và tên:</strong> {currentPerson.hoTen}</p>
               <p><strong>Phòng:</strong> {currentPerson.phong}</p>
               <p><strong>ID chỗ:</strong> {currentPerson.idCho}</p>
               <p><strong>Mã thẻ:</strong> {currentPerson.maThe}</p>
+              {currentPerson.timeString && (
+                <p><strong>Thời gian:</strong> {currentPerson.timeString}</p>
+              )}
             </div>
           </div>
         )}
       </div>
 
       <div className="scanned-list-section">
-        <h2>Danh sách đã quét ({scannedCards.length})</h2>
+        <div className="scanned-list-header">
+          <h2>Danh sách đã quét ({scannedCards.length})</h2>
+          {scannedCards.length > 0 && onClearAll && (
+            <button 
+              className="clear-all-button"
+              onClick={onClearAll}
+              title="Xóa tất cả"
+            >
+              🗑️ Xóa tất cả
+            </button>
+          )}
+        </div>
         <div className="scanned-list">
           {scannedCards.length === 0 ? (
             <p className="empty-message">Chưa có người nào được quét thẻ</p>
           ) : (
             scannedCards.map((person, index) => (
-              <div key={index} className="scanned-card">
+              <div key={person.maThe || index} className="scanned-card" style={{ animationDelay: `${index * 0.05}s` }}>
                 <div className="scanned-card-info">
                   <p className="person-name">{person.hoTen}</p>
                   <p className="person-details">Phòng: {person.phong} | Chỗ: {person.idCho}</p>
                   <p className="person-card-code">Mã thẻ: {person.maThe}</p>
+                  {person.timeString && (
+                    <p className="person-time">🕒 {person.timeString}</p>
+                  )}
                 </div>
                 <button
                   className="remove-button"
