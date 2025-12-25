@@ -3,22 +3,8 @@
   align-items: center;
 }
 
-.upload-button {
-  background-color: #3498db;
+.excel-status {
   color: white;
-  border: none;
-  padding: 0.6rem 1.2rem;
-  border-radius: 6px;
-  cursor: pointer;
   font-size: 0.9rem;
   font-weight: 500;
-  transition: background-color 0.2s;
-}
-
-.upload-button:hover {
-  background-color: #2980b9;
-}
-
-.upload-button:active {
-  transform: scale(0.98);
 }

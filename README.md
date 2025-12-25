@@ -35,11 +35,15 @@ File Excel cần có các cột sau (tên cột có thể là tiếng Việt ho�
 
 ## Cách sử dụng
 
-1. Click nút "📄 Tải lên Excel" và chọn file Excel chứa danh sách người tham gia
-2. Nhập mã thẻ vào ô input và nhấn Enter hoặc click nút "Quét"
-3. Xem thông tin người vừa quét ở phần bên trái
-4. Xem sơ đồ chỗ ngồi được cập nhật ở phần bên phải
-5. Xem thống kê số lượng đã/chưa điểm danh ở đầu sơ đồ
+1. **Copy file Excel vào thư mục public**: 
+   - Đặt file Excel có tên `Danh sach.xlsx` vào thư mục `public/` 
+   - Hoặc chạy lệnh: `npm run copy-excel` (nếu file Excel đã có trong thư mục gốc)
+2. Chạy ứng dụng: `npm run dev`
+3. Ứng dụng sẽ tự động đọc file Excel khi khởi động
+4. Nhập mã thẻ vào ô input và nhấn Enter hoặc click nút "Quét"
+5. Xem thông tin người vừa quét ở phần bên trái
+6. Xem sơ đồ chỗ ngồi được cập nhật ở phần bên phải
+7. Xem thống kê số lượng đã/chưa điểm danh ở đầu sơ đồ
 
 ## Công nghệ sử dụng
 

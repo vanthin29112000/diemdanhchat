@@ -1,20 +1,22 @@
-import { useRef } from 'react'
+import { useEffect } from 'react'
 import * as XLSX from 'xlsx'
 import './ExcelUploader.css'
 
 function ExcelUploader({ onUpload }) {
-  const fileInputRef = useRef(null)
-
-  const handleFileUpload = (event) => {
-    const file = event.target.files[0]
-    
-    if (!file) return
-
-    const reader = new FileReader()
-    
-    reader.onload = (e) => {
+  useEffect(() => {
+    // Tự động đọc file Excel từ thư mục public khi component mount
+    const loadExcelFile = async () => {
       try {
-        const data = new Uint8Array(e.target.result)
+        // Đọc file Excel từ thư mục public
+        const response = await fetch('/Danh sach.xlsx')
+        if (!response.ok) {
+          console.error('Không tìm thấy file Excel')
+          alert('Không tìm thấy file "Danh sach.xlsx" trong thư mục public')
+          return
+        }
+        
+        const arrayBuffer = await response.arrayBuffer()
+        const data = new Uint8Array(arrayBuffer)
         const workbook = XLSX.read(data, { type: 'array' })
         
         // Get first sheet
@@ -34,37 +36,20 @@ function ExcelUploader({ onUpload }) {
         }))
         
         onUpload(normalizedData)
-        alert(`Đã tải lên thành công ${normalizedData.length} người!`)
+        console.log(`Đã tải thành công ${normalizedData.length} người từ file Excel`)
       } catch (error) {
         console.error('Error reading file:', error)
-        alert('Lỗi khi đọc file Excel. Vui lòng kiểm tra lại định dạng file.')
+        alert('Lỗi khi đọc file Excel. Vui lòng kiểm tra lại file "Danh sach.xlsx" trong thư mục public.')
       }
     }
-    
-    reader.readAsArrayBuffer(file)
-    
-    // Reset input
-    if (fileInputRef.current) {
-      fileInputRef.current.value = ''
-    }
-  }
 
-  const handleClick = () => {
-    fileInputRef.current?.click()
-  }
+    loadExcelFile()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return (
     <div className="excel-uploader">
-      <input
-        ref={fileInputRef}
-        type="file"
-        accept=".xlsx,.xls"
-        onChange={handleFileUpload}
-        style={{ display: 'none' }}
-      />
-      <button className="upload-button" onClick={handleClick}>
-        📄 Tải lên Excel
-      </button>
+      <span className="excel-status">📄 Đang tải dữ liệu từ "Danh sach.xlsx"</span>
     </div>
   )
 }
