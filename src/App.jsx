@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import ExcelUploader from './components/ExcelUploader'
 import CardScanner from './components/CardScanner'
 import SeatLayout from './components/SeatLayout'
+import ConferenceLayout from './components/ConferenceLayout'
 import './App.css'
 
 const STORAGE_KEY = 'scannedCardsData'
@@ -115,7 +116,7 @@ function App() {
         </div>
         
         <div className="right-panel">
-          <SeatLayout 
+          <ConferenceLayout 
             attendanceList={attendanceList}
             scannedCards={scannedCards}
           />

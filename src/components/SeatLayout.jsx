@@ -78,7 +78,7 @@ function SeatLayout({ attendanceList, scannedCards }) {
           seats.map((seat, index) => (
             <div
               key={seat.id}
-              className={`seat ${seat.isScanned ? 'seat-scanned' : 'seat-empty'}`}
+              className={`seat ${seat.isScanned ? 'seat-scanned newly-scanned' : 'seat-empty'}`}
               style={{ animationDelay: `${index * 0.02}s` }}
               title={
                 seat.isScanned
@@ -88,14 +88,18 @@ function SeatLayout({ attendanceList, scannedCards }) {
             >
               <div className="seat-id">{seat.id}</div>
               {seat.isScanned && (
-                <div className="seat-info">
+                <>
+                  <div className="scan-indicator-seat">✓</div>
+                  <div className="flash-overlay-seat"></div>
+                  <div className="seat-info">
                   <div className="seat-name">
                     {seat.personData?.hoTen || seat.person?.hoTen || seat.person?.['Họ và tên'] || ''}
                   </div>
                   <div className="seat-room">
                     {seat.personData?.phong || seat.person?.phong || seat.person?.['Phòng'] || ''}
                   </div>
-                </div>
+                  </div>
+                </>
               )}
             </div>
           ))
