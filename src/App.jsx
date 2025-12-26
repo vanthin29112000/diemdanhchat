@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import Login from './components/Login'
 import ExcelUploader from './components/ExcelUploader'
 import CardScanner from './components/CardScanner'
 import SeatLayout from './components/SeatLayout'
@@ -6,8 +7,19 @@ import ConferenceLayout from './components/ConferenceLayout'
 import './App.css'
 
 const STORAGE_KEY = 'scannedCardsData'
+const AUTH_KEY = 'isAuthenticated'
 
 function App() {
+  const [isAuthenticated, setIsAuthenticated] = useState(() => {
+    // Check if user is already authenticated
+    try {
+      const saved = localStorage.getItem(AUTH_KEY)
+      return saved === 'true'
+    } catch (error) {
+      return false
+    }
+  })
+  
   const [attendanceList, setAttendanceList] = useState([])
   
   // Load scanned cards from localStorage on mount
@@ -98,11 +110,31 @@ function App() {
     }
   }
 
+  const handleLogin = () => {
+    setIsAuthenticated(true)
+    localStorage.setItem(AUTH_KEY, 'true')
+  }
+
+  const handleLogout = () => {
+    setIsAuthenticated(false)
+    localStorage.removeItem(AUTH_KEY)
+  }
+
+  // Show login screen if not authenticated
+  if (!isAuthenticated) {
+    return <Login onLogin={handleLogin} />
+  }
+
   return (
     <div className="app">
       <header className="app-header">
         <h1>Hội Nghị Công Đoàn - Điểm Danh</h1>
-        <ExcelUploader onUpload={handleExcelUpload} />
+        <div className="header-actions">
+          <ExcelUploader onUpload={handleExcelUpload} />
+          <button className="logout-button" onClick={handleLogout} title="Đăng xuất">
+            🚪 Đăng xuất
+          </button>
+        </div>
       </header>
       
       <div className="app-content">

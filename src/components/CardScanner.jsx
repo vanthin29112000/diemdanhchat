@@ -1,9 +1,13 @@
 import { useState, useRef, useEffect } from 'react'
+import NotificationPopup from './NotificationPopup'
+import SuccessPopup from './SuccessPopup'
 import './CardScanner.css'
 
 function CardScanner({ onScan, scannedCards, onRemove, onClearAll }) {
   const [cardCode, setCardCode] = useState('')
   const [currentPerson, setCurrentPerson] = useState(null)
+  const [notification, setNotification] = useState(null)
+  const [successPerson, setSuccessPerson] = useState(null)
   const inputRef = useRef(null)
 
   useEffect(() => {
@@ -20,13 +24,17 @@ function CardScanner({ onScan, scannedCards, onRemove, onClearAll }) {
     
     if (person) {
       setCurrentPerson(person)
+      setSuccessPerson(person) // Show success popup
       setCardCode('')
       // Auto focus again for next scan
       setTimeout(() => inputRef.current?.focus(), 100)
     } else {
-      alert('Không tìm thấy thông tin với mã thẻ này!')
+      setNotification({
+        message: `Không tìm thấy thông tin với mã thẻ "${cardCode.trim()}". Vui lòng kiểm tra lại mã thẻ hoặc liên hệ ban tổ chức.`,
+        type: 'error'
+      })
       setCardCode('')
-      inputRef.current?.focus()
+      setTimeout(() => inputRef.current?.focus(), 100)
     }
   }
 
@@ -42,6 +50,21 @@ function CardScanner({ onScan, scannedCards, onRemove, onClearAll }) {
 
   return (
     <div className="card-scanner">
+      {notification && (
+        <NotificationPopup
+          message={notification.message}
+          type={notification.type}
+          onClose={() => setNotification(null)}
+          duration={4000}
+        />
+      )}
+      {successPerson && (
+        <SuccessPopup
+          person={successPerson}
+          onClose={() => setSuccessPerson(null)}
+          duration={5000}
+        />
+      )}
       <div className="scanner-section">
         <h2>Quét Thẻ</h2>
         <form onSubmit={handleScan} className="scan-form">
@@ -65,7 +88,7 @@ function CardScanner({ onScan, scannedCards, onRemove, onClearAll }) {
             <h3>✅ Thông tin vừa quét:</h3>
             <div className="person-info">
               <p><strong>Họ và tên:</strong> {currentPerson.hoTen}</p>
-              <p><strong>Phòng:</strong> {currentPerson.phong}</p>
+              <p><strong>Tên đơn vị:</strong> {currentPerson.phong}</p>
               <p><strong>ID chỗ:</strong> {currentPerson.idCho}</p>
               <p><strong>Mã thẻ:</strong> {currentPerson.maThe}</p>
               {currentPerson.timeString && (
@@ -79,15 +102,6 @@ function CardScanner({ onScan, scannedCards, onRemove, onClearAll }) {
       <div className="scanned-list-section">
         <div className="scanned-list-header">
           <h2>Danh sách đã quét ({scannedCards.length})</h2>
-          {scannedCards.length > 0 && onClearAll && (
-            <button 
-              className="clear-all-button"
-              onClick={onClearAll}
-              title="Xóa tất cả"
-            >
-              🗑️ Xóa tất cả
-            </button>
-          )}
         </div>
         <div className="scanned-list">
           {scannedCards.length === 0 ? (
@@ -97,7 +111,7 @@ function CardScanner({ onScan, scannedCards, onRemove, onClearAll }) {
               <div key={person.maThe || index} className="scanned-card" style={{ animationDelay: `${index * 0.05}s` }}>
                 <div className="scanned-card-info">
                   <p className="person-name">{person.hoTen}</p>
-                  <p className="person-details">Phòng: {person.phong} | Chỗ: {person.idCho}</p>
+                  <p className="person-details">Tên đơn vị: {person.phong} | Chỗ: {person.idCho}</p>
                   <p className="person-card-code">Mã thẻ: {person.maThe}</p>
                   {person.timeString && (
                     <p className="person-time">🕒 {person.timeString}</p>
