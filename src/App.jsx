@@ -61,14 +61,27 @@ function App() {
     })
     
     if (person) {
-      // Normalize person data
+      // Use cardCode as key to ensure consistency
+      const maTheValue = person.maThe || person['Mã thẻ'] || person['Mã Thẻ'] || cardCode
+      const key = String(maTheValue).trim() || cardCode.trim()
+      
+      // Check if person already scanned - if yes, keep old timestamp
+      const existingData = scannedCards.get(key)
+      
+      if (existingData && existingData.timestamp) {
+        // Already scanned before, keep the original timestamp and return existing data
+        return existingData
+      }
+      
+      // First time scanning - create new timestamp
       const now = new Date()
       const personData = {
         hoTen: person.hoTen || person['Họ và tên'] || person['Họ tên'] || person['Họ và Tên'] || '',
         phong: person.phong || person['Phòng'] || person['Phòng ban'] || '',
         idCho: person.idCho || person['ID chỗ'] || person['ID Chỗ'] || person['id chỗ'] || person['idCho'] || '',
-        maThe: person.maThe || person['Mã thẻ'] || person['Mã Thẻ'] || cardCode,
+        maThe: maTheValue,
         id: person.id || person['ID'] || '',
+        image: person.image || person['Image'] || person['Ảnh'] || person['ảnh'] || '',
         timestamp: now.toISOString(),
         timeString: now.toLocaleString('vi-VN', {
           day: '2-digit',
@@ -80,9 +93,7 @@ function App() {
         })
       }
       
-      // Use cardCode as key to ensure consistency
-      const key = String(personData.maThe).trim() || cardCode.trim()
-      
+      // Update state
       setScannedCards(prev => {
         const newMap = new Map(prev)
         newMap.set(key, personData)

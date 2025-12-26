@@ -73,13 +73,14 @@
 }
 
 .current-person-card {
-  background: linear-gradient(to bottom, #ffffff 0%, #e3f2fd 100%);
-  padding: 1rem;
-  border-radius: 8px;
+  background: linear-gradient(135deg, #ffffff 0%, #e3f2fd 50%, #ffffff 100%);
+  padding: 1.5rem;
+  border-radius: 12px;
   border: 2px solid #1976d2;
   margin-top: 1rem;
   animation: slideInDown 0.4s ease-out;
-  box-shadow: 0 4px 12px rgba(25, 118, 210, 0.2);
+  box-shadow: 0 6px 20px rgba(25, 118, 210, 0.25);
+  text-align: center;
 }
 
 .animate-success {
@@ -99,35 +100,116 @@
 
 @keyframes pulse {
   0%, 100% {
-    box-shadow: 0 0 0 0 rgba(25, 118, 210, 0.4);
+    box-shadow: 0 6px 20px rgba(25, 118, 210, 0.25);
   }
   50% {
-    box-shadow: 0 0 0 10px rgba(25, 118, 210, 0);
+    box-shadow: 0 8px 30px rgba(25, 118, 210, 0.4);
   }
 }
 
+.success-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.success-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  box-shadow: 0 3px 10px rgba(76, 175, 80, 0.3);
+}
+
 .current-person-card h3 {
-  font-size: 1.1rem;
-  margin-bottom: 0.75rem;
+  font-size: 1.3rem;
+  margin: 0;
   color: #1976d2;
   font-weight: 700;
+}
+
+.person-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 1rem auto;
+  box-shadow: 0 4px 15px rgba(25, 118, 210, 0.3);
+  border: 3px solid white;
+  position: relative;
+  overflow: hidden;
+}
+
+.person-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.avatar-initials {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .person-info {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.75rem;
+  margin-top: 1rem;
+  text-align: left;
 }
 
-.person-info p {
-  margin: 0;
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.info-row:last-child {
+  border-bottom: none;
+}
+
+.info-label {
   font-size: 0.9rem;
+  color: #666;
+  font-weight: 500;
+  min-width: 120px;
 }
 
-.person-info strong {
-  color: #1976d2;
-  margin-right: 0.5rem;
+.info-value {
+  font-size: 0.95rem;
+  color: #2c3e50;
   font-weight: 600;
+  text-align: right;
+  flex: 1;
+}
+
+.time-value {
+  color: #1976d2;
+  font-weight: 700;
 }
 
 .scanned-list-section {

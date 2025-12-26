@@ -27,7 +27,6 @@ function SuccessPopup({ person, onClose, duration = 5000 }) {
         className="success-popup"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="success-popup-icon">✅</div>
         <div className="success-popup-avatar">
           {getInitials(person.hoTen)}
         </div>

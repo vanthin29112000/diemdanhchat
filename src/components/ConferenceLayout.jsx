@@ -1,7 +1,9 @@
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import './ConferenceLayout.css'
 
 function ConferenceLayout({ attendanceList, scannedCards }) {
+  const [showLegend, setShowLegend] = useState(false)
+  
   // Get the most recently scanned seat ID
   const getLastScannedSeatId = useMemo(() => {
     const scannedArray = Array.from(scannedCards.values())
@@ -291,6 +293,7 @@ function ConferenceLayout({ attendanceList, scannedCards }) {
         </div>
       </div>
 
+
       <div className="conference-map">
         {/* Two halves layout */}
         <div className="hall-layout">
@@ -358,6 +361,58 @@ function ConferenceLayout({ attendanceList, scannedCards }) {
           </div>
         </div>
       </div>
+
+      {/* Icon info button ở góc trái dưới */}
+      <button 
+        className="legend-info-button"
+        onClick={() => setShowLegend(!showLegend)}
+        title="Xem ghi chú trạng thái"
+      >
+        ℹ️
+      </button>
+
+      {/* Modal hiển thị legend */}
+      {showLegend && (
+        <div className="legend-modal-overlay" onClick={() => setShowLegend(false)}>
+          <div className="legend-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="legend-modal-header">
+              <h3>Ghi chú trạng thái ghế</h3>
+              <button 
+                className="legend-modal-close"
+                onClick={() => setShowLegend(false)}
+              >
+                ×
+              </button>
+            </div>
+            <div className="legend-modal-content">
+              <div className="legend-item">
+                <div className="legend-seat seat-empty-sample">
+                  <div className="legend-seat-id">A1</div>
+                </div>
+                <span className="legend-text">Chưa được sắp xếp</span>
+              </div>
+              <div className="legend-item">
+                <div className="legend-seat conference-seat">
+                  <div className="legend-seat-id">A2</div>
+                </div>
+                <span className="legend-text">Chưa điểm danh</span>
+              </div>
+              <div className="legend-item">
+                <div className="legend-seat seat-scanned-sample">
+                  <div className="legend-seat-id">A3</div>
+                </div>
+                <span className="legend-text">Đã điểm danh</span>
+              </div>
+              <div className="legend-item">
+                <div className="legend-seat latest-scanned-sample">
+                  <div className="legend-seat-id">A4</div>
+                </div>
+                <span className="legend-text">Vừa điểm danh (mới nhất)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

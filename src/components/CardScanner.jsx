@@ -1,13 +1,11 @@
 import { useState, useRef, useEffect } from 'react'
 import NotificationPopup from './NotificationPopup'
-import SuccessPopup from './SuccessPopup'
 import './CardScanner.css'
 
 function CardScanner({ onScan, scannedCards, onRemove, onClearAll }) {
   const [cardCode, setCardCode] = useState('')
   const [currentPerson, setCurrentPerson] = useState(null)
   const [notification, setNotification] = useState(null)
-  const [successPerson, setSuccessPerson] = useState(null)
   const inputRef = useRef(null)
 
   useEffect(() => {
@@ -24,7 +22,6 @@ function CardScanner({ onScan, scannedCards, onRemove, onClearAll }) {
     
     if (person) {
       setCurrentPerson(person)
-      setSuccessPerson(person) // Show success popup
       setCardCode('')
       // Auto focus again for next scan
       setTimeout(() => inputRef.current?.focus(), 100)
@@ -58,13 +55,6 @@ function CardScanner({ onScan, scannedCards, onRemove, onClearAll }) {
           duration={4000}
         />
       )}
-      {successPerson && (
-        <SuccessPopup
-          person={successPerson}
-          onClose={() => setSuccessPerson(null)}
-          duration={5000}
-        />
-      )}
       <div className="scanner-section">
         <h2>Quét Thẻ</h2>
         <form onSubmit={handleScan} className="scan-form">
@@ -85,14 +75,53 @@ function CardScanner({ onScan, scannedCards, onRemove, onClearAll }) {
 
         {currentPerson && (
           <div className="current-person-card animate-success">
-            <h3>✅ Thông tin vừa quét:</h3>
+            <div className="success-header">
+              <div className="success-icon">✓</div>
+              <h3>Điểm danh thành công</h3>
+            </div>
+            <div className="person-avatar">
+              {currentPerson.image ? (
+                <img 
+                  src={currentPerson.image.startsWith('/') || currentPerson.image.startsWith('http') 
+                    ? currentPerson.image 
+                    : `/images/${currentPerson.image}`}
+                  alt={currentPerson.hoTen || 'Avatar'}
+                  onError={(e) => {
+                    // Nếu ảnh lỗi, hiển thị avatar chữ cái
+                    e.target.style.display = 'none'
+                    e.target.nextSibling.style.display = 'flex'
+                  }}
+                />
+              ) : null}
+              <div className="avatar-initials" style={{ display: currentPerson.image ? 'none' : 'flex' }}>
+                {(() => {
+                  if (!currentPerson.hoTen) return '?'
+                  const words = currentPerson.hoTen.trim().split(' ').filter(w => w.length > 0)
+                  if (words.length >= 2) {
+                    return (words[0][0] + words[words.length - 1][0]).toUpperCase()
+                  }
+                  return words[0][0].toUpperCase()
+                })()}
+              </div>
+            </div>
             <div className="person-info">
-              <p><strong>Họ và tên:</strong> {currentPerson.hoTen}</p>
-              <p><strong>Tên đơn vị:</strong> {currentPerson.phong}</p>
-              <p><strong>ID chỗ:</strong> {currentPerson.idCho}</p>
-              <p><strong>Mã thẻ:</strong> {currentPerson.maThe}</p>
+              <div className="info-row">
+                <span className="info-label">Họ và tên:</span>
+                <span className="info-value">{currentPerson.hoTen}</span>
+              </div>
+              <div className="info-row">
+                <span className="info-label">Tên đơn vị:</span>
+                <span className="info-value">{currentPerson.phong}</span>
+              </div>
+              <div className="info-row">
+                <span className="info-label">Chỗ ngồi:</span>
+                <span className="info-value">{currentPerson.idCho}</span>
+              </div>
               {currentPerson.timeString && (
-                <p><strong>Thời gian:</strong> {currentPerson.timeString}</p>
+                <div className="info-row">
+                  <span className="info-label">Thời gian:</span>
+                  <span className="info-value time-value">{currentPerson.timeString}</span>
+                </div>
               )}
             </div>
           </div>
@@ -112,7 +141,6 @@ function CardScanner({ onScan, scannedCards, onRemove, onClearAll }) {
                 <div className="scanned-card-info">
                   <p className="person-name">{person.hoTen}</p>
                   <p className="person-details">Tên đơn vị: {person.phong} | Chỗ: {person.idCho}</p>
-                  <p className="person-card-code">Mã thẻ: {person.maThe}</p>
                   {person.timeString && (
                     <p className="person-time">🕒 {person.timeString}</p>
                   )}

@@ -32,7 +32,8 @@ function ExcelUploader({ onUpload }) {
           hoTen: row['Họ và tên'] || row['Họ tên'] || row['hoTen'] || row['Họ và Tên'] || '',
           maThe: row['Mã thẻ'] || row['maThe'] || row['Mã Thẻ'] || '',
           phong: row['Phòng'] || row['phong'] || row['Phòng ban'] || '',
-          idCho: row['ID chỗ'] || row['ID Chỗ'] || row['idCho'] || row['id chỗ'] || ''
+          idCho: row['ID chỗ'] || row['ID Chỗ'] || row['idCho'] || row['id chỗ'] || '',
+          image: row['Image'] || row['image'] || row['Ảnh'] || row['ảnh'] || row['ẢNH'] || ''
         }))
         
         onUpload(normalizedData)

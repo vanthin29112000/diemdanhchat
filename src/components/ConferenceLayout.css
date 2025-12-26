@@ -71,6 +71,223 @@
   color: #e74c3c;
 }
 
+/* Seat Legend - Ghi chú trạng thái */
+.seat-legend {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.5rem 1rem;
+  background: white;
+  border-radius: 6px;
+  margin-bottom: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  flex-wrap: wrap;
+}
+
+.legend-title {
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: #1976d2;
+}
+
+.legend-items {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.legend-seat {
+  width: 35px;
+  height: 35px;
+  border-radius: 3px;
+  border: 1px solid #ddd;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.5rem;
+  flex-shrink: 0;
+}
+
+.seat-empty-sample {
+  background: #f8f9fa;
+  border-color: #ddd;
+  opacity: 0.4;
+}
+
+.seat-scanned-sample {
+  background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+  border: none;
+}
+
+.latest-scanned-sample {
+  background: linear-gradient(135deg, #bbdefb 0%, #64b5f6 100%);
+  border: 2px solid #1976d2;
+  box-shadow: 0 0 10px rgba(25, 118, 210, 0.4);
+  animation: latestScannedBlink 1s ease-in-out infinite;
+}
+
+.legend-text {
+  font-size: 0.75rem;
+  color: #333;
+}
+
+/* Info button ở góc trái dưới */
+.legend-info-button {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%);
+  color: white;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(25, 118, 210, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  transition: all 0.3s ease;
+}
+
+.legend-info-button:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 16px rgba(25, 118, 210, 0.6);
+}
+
+.legend-info-button:active {
+  transform: scale(0.95);
+}
+
+/* Modal overlay */
+.legend-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.legend-modal {
+  background: white;
+  border-radius: 12px;
+  padding: 0;
+  max-width: 500px;
+  width: 90%;
+  max-height: 80vh;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.legend-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.legend-modal-header h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  color: #1976d2;
+  font-weight: 700;
+}
+
+.legend-modal-close {
+  background: none;
+  border: none;
+  font-size: 2rem;
+  color: #666;
+  cursor: pointer;
+  padding: 0;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+}
+
+.legend-modal-close:hover {
+  background: #f5f5f5;
+  color: #1976d2;
+}
+
+.legend-modal-content {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.legend-modal-content .legend-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem;
+  background: #f9f9f9;
+  border-radius: 8px;
+}
+
+.legend-modal-content .legend-seat {
+  width: 45px;
+  height: 45px;
+  position: relative;
+}
+
+.legend-seat-id {
+  font-weight: 700;
+  color: #1976d2;
+  font-size: 0.7rem;
+  line-height: 1;
+}
+
+.seat-empty-sample .legend-seat-id {
+  color: #999;
+}
+
+.seat-scanned-sample .legend-seat-id,
+.latest-scanned-sample .legend-seat-id {
+  color: #1976d2;
+}
+
 .conference-map {
   flex: 1;
   overflow: hidden;
