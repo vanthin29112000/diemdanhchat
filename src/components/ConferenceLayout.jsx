@@ -72,7 +72,7 @@ function ConferenceLayout({ attendanceList, scannedCards }) {
     )
   }
 
-  // Render VIP grid (Khách mời or Ban Giám đốc) - 2 hàng, mỗi hàng 4 ghế
+  // Render VIP grid (Khách mời or Ban Giám đốc) - flexible rows and cols
   const renderVIPGrid = (prefix, rows = 2, cols = 4, showRowLabels = true) => {
     const rowElements = []
     for (let row = 1; row <= rows; row++) {
@@ -104,81 +104,188 @@ function ConferenceLayout({ attendanceList, scannedCards }) {
     )
   }
 
-  // Render Trưởng các đơn vị (3 hàng, mỗi hàng 8 ghế với lối đi ở giữa)
-  const renderTruongDonVi = () => {
-    const leftRows = []
-    const rightRows = []
+  // Render Khách mời với 5 hàng (KM11-KM14, KM21-KM24, KM31-KM34, KM41-KM44, KM51-KM54)
+  const renderKhachMoi = () => {
+    const rowElements = []
     
-    for (let row = 1; row <= 3; row++) {
-      // Left 4 seats
-      const leftSeats = []
+    // Hàng 1-2: KM11-KM14, KM21-KM24
+    for (let row = 1; row <= 2; row++) {
+      const seats = []
       for (let col = 1; col <= 4; col++) {
-        const seatId = `TDV${row}${col}`
+        const seatId = `KM${row}${col}`
         const seatData = seatMap.get(seatId)
         const isScanned = seatData?.isScanned || false
         const person = seatData?.person || seatData?.personData || null
         const isLatestScanned = getLastScannedSeatId === seatId
         
-        leftSeats.push(
+        seats.push(
           <div key={seatId} className="grid-seat-cell">
             {renderSeat(seatId, person, isScanned, isLatestScanned)}
           </div>
         )
       }
-      
-      // Right 4 seats
-      const rightSeats = []
-      for (let col = 5; col <= 8; col++) {
-        const seatId = `TDV${row}${col}`
-        const seatData = seatMap.get(seatId)
-        const isScanned = seatData?.isScanned || false
-        const person = seatData?.person || seatData?.personData || null
-        const isLatestScanned = getLastScannedSeatId === seatId
-        
-        rightSeats.push(
-          <div key={seatId} className="grid-seat-cell">
-            {renderSeat(seatId, person, isScanned, isLatestScanned)}
-          </div>
-        )
-      }
-      
-      leftRows.push(
-        <div key={row} className="grid-row">
+      rowElements.push(
+        <div key={`KM${row}`} className="grid-row">
           <div className="row-label">{row}</div>
-          <div className="grid-seats grid-seats-4">{leftSeats}</div>
+          <div className="grid-seats grid-seats-4">{seats}</div>
         </div>
       )
+    }
+    
+    // Hàng 3-5: TDV11-TDV14 -> KM31-KM34, TDV21-TDV24 -> KM41-KM44, TDV31-TDV34 -> KM51-KM54
+    const tdvToKmMapping = {
+      1: { tdvRow: 1, kmRow: 3 }, // TDV11-TDV14 -> KM31-KM34
+      2: { tdvRow: 2, kmRow: 4 }, // TDV21-TDV24 -> KM41-KM44
+      3: { tdvRow: 3, kmRow: 5 }  // TDV31-TDV34 -> KM51-KM54
+    }
+    
+    for (let mapIndex = 1; mapIndex <= 3; mapIndex++) {
+      const mapping = tdvToKmMapping[mapIndex]
+      const seats = []
       
-      rightRows.push(
-        <div key={row} className="grid-row">
-          <div className="grid-seats grid-seats-4">{rightSeats}</div>
+      for (let col = 1; col <= 4; col++) {
+        // Lấy dữ liệu từ TDV (ID gốc trong seatMap)
+        const originalSeatId = `TDV${mapping.tdvRow}${col}`
+        // Hiển thị với ID mới là KM
+        const displaySeatId = `KM${mapping.kmRow}${col}`
+        
+        const seatData = seatMap.get(originalSeatId)
+        const isScanned = seatData?.isScanned || false
+        const person = seatData?.person || seatData?.personData || null
+        // Check cả ID gốc và ID mới cho latest scanned
+        const isLatestScanned = (getLastScannedSeatId === originalSeatId || getLastScannedSeatId === displaySeatId)
+        
+        seats.push(
+          <div key={displaySeatId} className="grid-seat-cell">
+            {renderSeat(displaySeatId, person, isScanned, isLatestScanned)}
+          </div>
+        )
+      }
+      
+      rowElements.push(
+        <div key={`KM${mapping.kmRow}`} className="grid-row">
+          <div className="row-label">{mapping.kmRow}</div>
+          <div className="grid-seats grid-seats-4">{seats}</div>
         </div>
       )
     }
     
     return (
-      <div className="truong-don-vi-with-walkway">
-        <div className="truong-don-vi-left">{leftRows}</div>
-        <div className="truong-don-vi-walkway-full">
-          <div className="walkway-label">LỐI ĐI</div>
-        </div>
-        <div className="truong-don-vi-right">{rightRows}</div>
+      <div className="vip-grid">
+        {rowElements}
       </div>
     )
   }
 
-  // Render Area A (A1-A6, each row has 8 seats: 4 left, walkway, 4 right)
+  // Render Ban Giám đốc và Lãnh đạo đơn vị
+  const renderBanGiamDoc = () => {
+    const rowElements = []
+    
+    // Hàng 1: BGD11, BGD12, BGD13, BGD14 (4 ghế)
+    const row1Seats = []
+    for (let col = 1; col <= 4; col++) {
+      const seatId = `BGD1${col}`
+      const seatData = seatMap.get(seatId)
+      const isScanned = seatData?.isScanned || false
+      const person = seatData?.person || seatData?.personData || null
+      const isLatestScanned = getLastScannedSeatId === seatId
+      
+      row1Seats.push(
+        <div key={seatId} className="grid-seat-cell">
+          {renderSeat(seatId, person, isScanned, isLatestScanned)}
+        </div>
+      )
+    }
+    
+    rowElements.push(
+      <div key="row1" className="grid-row">
+        <div className="row-label">1</div>
+        <div className="grid-seats grid-seats-4">{row1Seats}</div>
+      </div>
+    )
+    
+    // Hàng 2: BGD21, BGD22, LDDV23, LDDV24 (4 ghế)
+    const row2Seats = []
+    // BGD21
+    const bgd21Data = seatMap.get('BGD21')
+    row2Seats.push(
+      <div key="BGD21" className="grid-seat-cell">
+        {renderSeat('BGD21', bgd21Data?.person || bgd21Data?.personData || null, bgd21Data?.isScanned || false, getLastScannedSeatId === 'BGD21')}
+      </div>
+    )
+    // BGD22
+    const bgd22Data = seatMap.get('BGD22')
+    row2Seats.push(
+      <div key="BGD22" className="grid-seat-cell">
+        {renderSeat('BGD22', bgd22Data?.person || bgd22Data?.personData || null, bgd22Data?.isScanned || false, getLastScannedSeatId === 'BGD22')}
+      </div>
+    )
+    // LDDV23, LDDV24
+    for (let col = 3; col <= 4; col++) {
+      const seatId = `LDDV2${col}`
+      const seatData = seatMap.get(seatId)
+      const isScanned = seatData?.isScanned || false
+      const person = seatData?.person || seatData?.personData || null
+      const isLatestScanned = getLastScannedSeatId === seatId
+      
+      row2Seats.push(
+        <div key={seatId} className="grid-seat-cell">
+          {renderSeat(seatId, person, isScanned, isLatestScanned)}
+        </div>
+      )
+    }
+    
+    rowElements.push(
+      <div key="row2" className="grid-row">
+        <div className="row-label">2</div>
+        <div className="grid-seats grid-seats-4">{row2Seats}</div>
+      </div>
+    )
+    
+    // Hàng 3-5: LDDV31-LDDV34, LDDV41-LDDV44, LDDV51-LDDV54 (mỗi hàng 4 ghế)
+    for (let row = 3; row <= 5; row++) {
+      const seats = []
+      for (let col = 1; col <= 4; col++) {
+        const seatId = `LDDV${row}${col}`
+        const seatData = seatMap.get(seatId)
+        const isScanned = seatData?.isScanned || false
+        const person = seatData?.person || seatData?.personData || null
+        const isLatestScanned = getLastScannedSeatId === seatId
+        
+        seats.push(
+          <div key={seatId} className="grid-seat-cell">
+            {renderSeat(seatId, person, isScanned, isLatestScanned)}
+          </div>
+        )
+      }
+      rowElements.push(
+        <div key={`row${row}`} className="grid-row">
+          <div className="row-label">{row}</div>
+          <div className="grid-seats grid-seats-4">{seats}</div>
+        </div>
+      )
+    }
+    
+    return (
+      <div className="vip-grid">
+        {rowElements}
+      </div>
+    )
+  }
+
+
+  // Render Area A (A1-A7, each row has 8 seats: 4 left, walkway, 4 right)
   const renderAreaA = () => {
     const leftRows = []
     const rightRows = []
     
-    for (let row = 1; row <= 6; row++) {
+    for (let row = 1; row <= 7; row++) {
       const rowLabel = `A${row}`
       
       // Left 4 seats
       const leftSeats = []
       for (let col = 1; col <= 4; col++) {
-        const seatId = `${rowLabel}${col}`
+        const seatId = `A${row}.${col}`
         const seatData = seatMap.get(seatId)
         const isScanned = seatData?.isScanned || false
         const person = seatData?.person || seatData?.personData || null
@@ -194,7 +301,7 @@ function ConferenceLayout({ attendanceList, scannedCards }) {
       // Right 4 seats
       const rightSeats = []
       for (let col = 5; col <= 8; col++) {
-        const seatId = `${rowLabel}${col}`
+        const seatId = `A${row}.${col}`
         const seatData = seatMap.get(seatId)
         const isScanned = seatData?.isScanned || false
         const person = seatData?.person || seatData?.personData || null
@@ -211,6 +318,7 @@ function ConferenceLayout({ attendanceList, scannedCards }) {
         <div key={rowLabel} className="grid-row">
           <div className="row-label">{rowLabel}</div>
           <div className="grid-seats grid-seats-4">{leftSeats}</div>
+
         </div>
       )
       
@@ -232,15 +340,21 @@ function ConferenceLayout({ attendanceList, scannedCards }) {
     )
   }
 
-  // Render Area B or C (B1-B6 or C1-C6 rows, each row has 8 seats)
+  // Render Area B hoặc C - Chuyển từ hàng ngang sang cột dọc
+  // Cột B1: B1.1, B1.2, B1.3, B1.4, B1.5, B1.6 (theo chiều dọc)
+  // Cột B2: B2.1, B2.2, B2.3, B2.4, B2.5, B2.6 (theo chiều dọc)
   const renderAreaBSection = (rowPrefix = 'B', startRow = 1, numRows = 6) => {
-    // Rows
     const rows = []
+    // Tạo 6 hàng (mỗi hàng có 8 ghế từ 8 cột khác nhau)
     for (let rowNum = 1; rowNum <= numRows; rowNum++) {
       const seats = []
+      // Mỗi hàng có 8 ghế từ 8 cột
       for (let col = 1; col <= 8; col++) {
-        // Mã ghế: {rowPrefix}{rowNum}{col}, ví dụ B11, B12, ..., B18, B21, ..., C11, C12, ...
-        const seatId = `${rowPrefix}${rowNum}${col}`
+        // ID gốc: B1.1, B1.2, B2.1, B2.2, ...
+        // Nhưng hiển thị theo cột: cột B1 có B1.1, B1.2, B1.3, ... (theo chiều dọc)
+        // Vậy cần map: hàng rowNum, cột col -> ghế B{col}.{rowNum}
+        const seatId = `${rowPrefix}${col}.${rowNum}`
+        
         const seatData = seatMap.get(seatId)
         const isScanned = seatData?.isScanned || false
         const person = seatData?.person || seatData?.personData || null
@@ -252,15 +366,25 @@ function ConferenceLayout({ attendanceList, scannedCards }) {
           </div>
         )
       }
+      // Xóa row-label (B1, B2, ..., B6)
       rows.push(
         <div key={`${rowPrefix}${rowNum}`} className="grid-row">
-          <div className="row-label">{rowPrefix}{rowNum}</div>
           <div className="grid-seats grid-seats-8">{seats}</div>
         </div>
       )
     }
     
-    return { rows }
+    // Thêm column labels B1-B8 hoặc C1-C8 ở trên
+    const columnLabels = []
+    for (let col = 1; col <= 8; col++) {
+      columnLabels.push(
+        <div key={`label-${col}`} className="column-label">
+          {rowPrefix}{col}
+        </div>
+      )
+    }
+    
+    return { rows, columnLabels }
   }
 
   // Calculate statistics
@@ -270,8 +394,8 @@ function ConferenceLayout({ attendanceList, scannedCards }) {
     return { total, scanned, remaining: total - scanned }
   }, [attendanceList, scannedCards])
 
-  const areaBTop = renderAreaBSection('B', 1, 6) // B1-B6
-  const areaBBottom = renderAreaBSection('C', 1, 6) // C1-C6
+  const areaBTop = renderAreaBSection('B', 1, 6) // B1-B6 chuyển thành B1-B8 (hàng ngang)
+  const areaBBottom = renderAreaBSection('C', 1, 6) // C1-C6 chuyển thành C1-C8 (hàng ngang)
 
   return (
     <div className="conference-layout">
@@ -306,26 +430,20 @@ function ConferenceLayout({ attendanceList, scannedCards }) {
 
             {/* VIP Section - Below stage, side by side with walkway */}
             <div className="vip-section-main">
-              {/* Left: Khách mời - 2 hàng, mỗi hàng 4 ghế */}
+              {/* Left: Khách mời - 5 hàng (2 hàng KM + 3 hàng TDV) */}
               <div className="vip-zone vip-zone-left">
                 <div className="vip-zone-label">KHÁCH MỜI</div>
-                {renderVIPGrid('KM', 2, 4)}
+                {renderKhachMoi()}
               </div>
               
               {/* Walkway between VIP zones */}
               <div className="vip-walkway"></div>
               
-              {/* Right: Ban Giám đốc - 2 hàng, mỗi hàng 4 ghế */}
+              {/* Right: Ban Giám đốc và Lãnh đạo đơn vị */}
               <div className="vip-zone vip-zone-right">
-                <div className="vip-zone-label">BAN GIÁM ĐỐC</div>
-                {renderVIPGrid('BGD', 2, 4, false)}
+                <div className="vip-zone-label">BAN GIÁM ĐỐC VÀ LÃNH ĐẠO ĐƠN VỊ</div>
+                {renderBanGiamDoc()}
               </div>
-            </div>
-
-            {/* Trưởng các đơn vị - Below VIP, 3 hàng 8 ghế với lối đi ở giữa */}
-            <div className="truong-don-vi-section">
-              <div className="truong-don-vi-label">LÃNH ĐẠO CÁC ĐƠN VỊ</div>
-              {renderTruongDonVi()}
             </div>
 
             {/* Area A */}
@@ -338,22 +456,32 @@ function ConferenceLayout({ attendanceList, scannedCards }) {
             </div>
           </div>
 
-          {/* Right half - Area B */}
+          {/* Right half - Area B và C */}
           <div className="right-half">
-            {/* Area B - Top half */}
+            {/* Area B - Giữ nguyên layout, chỉ đổi tên ghế */}
             <div className="area-b-section area-b-top">
               <div className="area-label">KHU ĐẠI BIỂU</div>
+              {/* Column labels B1-B8 ngay dưới chữ KHU ĐẠI BIỂU */}
+              <div className="area-b-column-labels">
+                {areaBTop.columnLabels}
+              </div>
               <div className="area-b-grid">
                 {areaBTop.rows}
               </div>
             </div>
 
-            {/* Area C - Bottom half */}
-            <div className="area-b-section area-b-bottom">
+            {/* Lối vào */}
             <div className="entrance-walkway">
-                      <div className="entrance-arrow">←</div>
-                      <span className="entrance-label-text">CỬA RA VÀO</span>
-                    </div>
+              <div className="entrance-arrow">←</div>
+              <span className="entrance-label-text">CỬA RA VÀO</span>
+            </div>
+
+            {/* Area C - Giữ nguyên layout, chỉ đổi tên ghế */}
+            <div className="area-b-section area-b-bottom">
+              {/* Column labels C1-C8 */}
+              <div className="area-b-column-labels">
+                {areaBBottom.columnLabels}
+              </div>
               <div className="area-b-grid">
                 {areaBBottom.rows}
               </div>
@@ -418,3 +546,4 @@ function ConferenceLayout({ attendanceList, scannedCards }) {
 }
 
 export default ConferenceLayout
+

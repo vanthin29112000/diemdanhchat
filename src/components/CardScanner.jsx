@@ -2,36 +2,61 @@ import { useState, useRef, useEffect } from 'react'
 import NotificationPopup from './NotificationPopup'
 import './CardScanner.css'
 
-function CardScanner({ onScan, scannedCards, onRemove, onClearAll }) {
+function CardScanner({ onScan, scannedCards, onRemove, onClearAll, newScanFromFirestore, onDismissNewScan }) {
   const [cardCode, setCardCode] = useState('')
   const [currentPerson, setCurrentPerson] = useState(null)
   const [notification, setNotification] = useState(null)
+  const [isLoading, setIsLoading] = useState(false)
   const inputRef = useRef(null)
+  
+  // Hiển thị notification khi có scan mới từ Firestore
+  useEffect(() => {
+    if (newScanFromFirestore) {
+      setCurrentPerson(newScanFromFirestore)
+      // Tự động ẩn sau 5 giây
+      const timer = setTimeout(() => {
+        setCurrentPerson(null)
+        onDismissNewScan?.()
+      }, 5000)
+      return () => clearTimeout(timer)
+    }
+  }, [newScanFromFirestore, onDismissNewScan])
 
   useEffect(() => {
     // Auto focus on input
     inputRef.current?.focus()
   }, [])
 
-  const handleScan = (e) => {
+  const handleScan = async (e) => {
     e.preventDefault()
     
     if (!cardCode.trim()) return
 
-    const person = onScan(cardCode.trim())
-    
-    if (person) {
-      setCurrentPerson(person)
-      setCardCode('')
-      // Auto focus again for next scan
-      setTimeout(() => inputRef.current?.focus(), 100)
-    } else {
+    setIsLoading(true)
+    try {
+      const person = await onScan(cardCode.trim())
+      
+      if (person) {
+        setCurrentPerson(person)
+        setCardCode('')
+        // Auto focus again for next scan
+        setTimeout(() => inputRef.current?.focus(), 100)
+      } else {
+        setNotification({
+          message: `Không tìm thấy thông tin với mã thẻ "${cardCode.trim()}". Vui lòng kiểm tra lại mã thẻ hoặc liên hệ ban tổ chức.`,
+          type: 'error'
+        })
+        setCardCode('')
+        setTimeout(() => inputRef.current?.focus(), 100)
+      }
+    } catch (error) {
+      console.error('Error scanning card:', error)
       setNotification({
-        message: `Không tìm thấy thông tin với mã thẻ "${cardCode.trim()}". Vui lòng kiểm tra lại mã thẻ hoặc liên hệ ban tổ chức.`,
+        message: 'Có lỗi xảy ra khi quét thẻ. Vui lòng thử lại.',
         type: 'error'
       })
-      setCardCode('')
-      setTimeout(() => inputRef.current?.focus(), 100)
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -68,8 +93,8 @@ function CardScanner({ onScan, scannedCards, onRemove, onClearAll }) {
             className="card-input"
             autoFocus
           />
-          <button type="submit" className="scan-button">
-            Quét
+          <button type="submit" className="scan-button" disabled={isLoading}>
+            {isLoading ? 'Đang kiểm tra...' : 'Quét'}
           </button>
         </form>
 

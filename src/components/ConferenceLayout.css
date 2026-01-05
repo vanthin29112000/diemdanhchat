@@ -291,18 +291,20 @@
 .conference-map {
   flex: 1;
   overflow: hidden;
-  padding: 0.4rem;
+  padding: 0.2rem;
   background: linear-gradient(to bottom, rgba(227, 242, 253, 0.3) 0%, transparent 100%);
   border-radius: 8px;
   min-height: 0;
+  box-sizing: border-box;
 }
 
 /* Two halves layout */
 .hall-layout {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.75rem;
+  grid-template-columns: 60% 40%;
+  gap: 0.5rem;
   height: 100%;
+  box-sizing: border-box;
 }
 
 /* Left half */
@@ -469,14 +471,7 @@
   white-space: nowrap;
 }
 
-/* Two halves layout */
-.hall-layout {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2rem;
-  flex: 1;
-  min-height: 0;
-}
+/* Two halves layout - duplicate removed, using the one above */
 
 /* Left half */
 .left-half {
@@ -563,8 +558,10 @@
 /* Right half */
 .right-half {
   flex-direction: column;
-  gap: 0.4rem;
+  gap: 0.3rem;
   position: relative;
+  overflow: hidden;
+  min-width: 0;
 }
 
 .area-b-section {
@@ -594,9 +591,50 @@
 .area-b-grid {
   display: flex;
   flex-direction: column;
-  gap: 0.2rem;
+  gap: 0.15rem;
   overflow-y: auto;
   flex: 1;
+  min-height: 0;
+}
+
+.area-b-column-labels {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 0.15rem;
+  margin-top: 0.2rem;
+  margin-bottom: 0.2rem;
+  padding: 0.1rem 0;
+}
+
+.column-label {
+  text-align: center;
+  font-weight: 700;
+  color: white;
+  font-size: 0.65rem;
+  background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%);
+  padding: 0.2rem 0.3rem;
+  border-radius: 3px;
+}
+
+/* Điều chỉnh kích thước ghế Area B và C để bằng với Area A */
+.area-b-section .conference-seat {
+  min-width: 50px;
+  max-width: 50px;
+  font-size: 0.65rem;
+  padding: 0.2rem;
+}
+
+.area-b-section .seat-id {
+  font-size: 0.65rem;
+}
+
+/* Điều chỉnh gap giữa các ghế để cân đối hơn */
+.area-b-grid .grid-seats {
+  gap: 0.2rem;
+}
+
+.area-b-column-labels {
+  gap: 0.2rem;
 }
 
 .area-b-bottom .area-b-grid {
@@ -732,8 +770,16 @@
   align-items: center;
 }
 
+.grid-seats-3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
 .grid-seats-4 {
   grid-template-columns: repeat(4, 1fr);
+}
+
+.grid-seats-5 {
+  grid-template-columns: repeat(5, 1fr);
 }
 
 .grid-seats-8 {
@@ -748,7 +794,7 @@
 
 /* Conference Seat */
 .conference-seat {
-  padding: 0.25rem;
+  padding: 0.2rem;
   background: #f5f5f5;
   border: 1px solid #ddd;
   border-radius: 3px;
@@ -757,7 +803,7 @@
   position: relative;
   transition: all 0.2s;
   min-width: 50px;
-  max-width: 60px;
+  max-width: 50px;
   width: 100%;
   aspect-ratio: 1;
   cursor: pointer;
@@ -765,6 +811,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  box-sizing: border-box;
 }
 
 .conference-seat:hover {
@@ -816,6 +863,18 @@
   font-size: 0.7rem;
   margin-bottom: 0.1rem;
   line-height: 1;
+}
+
+/* Đảm bảo tất cả ghế có cùng kích thước */
+.area-a-section .conference-seat,
+.area-a-left .conference-seat,
+.area-a-right .conference-seat,
+.vip-zone .conference-seat,
+.truong-don-vi-section .conference-seat {
+  min-width: 50px;
+  max-width: 50px;
+  font-size: 0.65rem;
+  padding: 0.2rem;
 }
 
 .seat-empty .seat-id {
