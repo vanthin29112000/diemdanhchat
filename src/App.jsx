@@ -355,7 +355,12 @@ function App() {
         <div className="left-panel">
           <CardScanner 
             onScan={handleCardScan}
-            scannedCards={Array.from(scannedCards.values())}
+            scannedCards={Array.from(scannedCards.values()).sort((a, b) => {
+              // Sắp xếp từ mới nhất (timestamp lớn nhất) đến cũ nhất (timestamp nhỏ nhất)
+              const timeA = a.timestamp ? new Date(a.timestamp).getTime() : 0
+              const timeB = b.timestamp ? new Date(b.timestamp).getTime() : 0
+              return timeB - timeA // Sắp xếp giảm dần (mới nhất trước)
+            })}
             onRemove={handleRemoveScan}
             onClearAll={handleClearAll}
             newScanFromFirestore={newScanFromFirestore}
