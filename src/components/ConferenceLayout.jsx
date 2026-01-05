@@ -395,7 +395,7 @@ function ConferenceLayout({ attendanceList, scannedCards }) {
   }, [attendanceList, scannedCards])
 
   const areaBTop = renderAreaBSection('B', 1, 6) // B1-B6 chuyển thành B1-B8 (hàng ngang)
-  const areaBBottom = renderAreaBSection('C', 1, 6) // C1-C6 chuyển thành C1-C8 (hàng ngang)
+  // const areaBBottom = renderAreaBSection('C', 1, 6) // C1-C6 chuyển thành C1-C8 (hàng ngang) - Đã ẩn
 
   return (
     <div className="conference-layout">
@@ -476,16 +476,15 @@ function ConferenceLayout({ attendanceList, scannedCards }) {
               <span className="entrance-label-text">CỬA RA VÀO</span>
             </div>
 
-            {/* Area C - Giữ nguyên layout, chỉ đổi tên ghế */}
-            <div className="area-b-section area-b-bottom">
-              {/* Column labels C1-C8 */}
+            {/* Area C - Đã ẩn */}
+            {/* <div className="area-b-section area-b-bottom">
               <div className="area-b-column-labels">
                 {areaBBottom.columnLabels}
               </div>
               <div className="area-b-grid">
                 {areaBBottom.rows}
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
