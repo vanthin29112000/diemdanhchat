@@ -31,7 +31,7 @@ function SuccessPopup({ person, onClose, duration = 5000 }) {
           {getInitials(person.hoTen)}
         </div>
         <div className="success-popup-content">
-          <h3 className="success-popup-title">Điểm danh thành công!</h3>
+          <h3 className="success-popup-title">Lấy chỗ thành công!</h3>
           <p className="success-popup-name">{person.hoTen}</p>
           <div className="success-popup-details">
             <div className="success-detail-item">

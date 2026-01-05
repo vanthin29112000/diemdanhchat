@@ -1,0 +1,261 @@
+.statistics-toggle-btn {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+}
+
+.statistics-toggle-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: translateY(-1px);
+}
+
+.statistics-panel-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.statistics-panel {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  max-width: 600px;
+  width: 100%;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.statistics-panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  border-bottom: 1px solid #e0e0e0;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.statistics-panel-header h3 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.statistics-close-btn {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: none;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 1.5rem;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.statistics-close-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: rotate(90deg);
+}
+
+.statistics-panel-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 15px;
+}
+
+.phong-stats-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.phong-stat-item {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: #f9f9f9;
+}
+
+.phong-stat-item:hover {
+  border-color: #667eea;
+  background: #f0f4ff;
+}
+
+.phong-stat-item.selected {
+  border-color: #667eea;
+  background: #f0f4ff;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
+}
+
+.phong-stat-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.phong-name {
+  flex: 1;
+  font-weight: 600;
+  color: #333;
+  font-size: 0.95rem;
+}
+
+.phong-count {
+  font-weight: 600;
+  color: #667eea;
+  font-size: 0.9rem;
+  min-width: 50px;
+  text-align: right;
+}
+
+.phong-toggle {
+  color: #667eea;
+  font-size: 0.8rem;
+  transition: transform 0.2s ease;
+}
+
+.phong-stat-item.selected .phong-toggle {
+  transform: rotate(90deg);
+}
+
+.phong-detail {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #e0e0e0;
+  animation: slideDown 0.2s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.detail-section {
+  margin-bottom: 15px;
+}
+
+.detail-section:last-child {
+  margin-bottom: 0;
+}
+
+.detail-title {
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin-bottom: 8px;
+  padding: 6px 10px;
+  border-radius: 4px;
+}
+
+.scanned-title {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.not-scanned-title {
+  background: #ffebee;
+  color: #c62828;
+}
+
+.detail-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.detail-item {
+  padding: 8px 10px;
+  border-radius: 4px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+}
+
+.scanned-item {
+  background: #f1f8e9;
+  border-left: 3px solid #4caf50;
+}
+
+.not-scanned-item {
+  background: #fff3e0;
+  border-left: 3px solid #ff9800;
+}
+
+.person-name {
+  font-weight: 500;
+  color: #333;
+}
+
+.person-seat {
+  color: #666;
+  font-size: 0.8rem;
+  margin-left: 10px;
+}
+
+/* Scrollbar styling */
+.detail-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.detail-list::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.detail-list::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 3px;
+}
+
+.detail-list::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .statistics-panel {
+    max-width: 95%;
+    max-height: 90vh;
+  }
+  
+  .phong-stat-header {
+    flex-wrap: wrap;
+  }
+}
+

@@ -4,6 +4,7 @@ import ExcelUploader from './components/ExcelUploader'
 import CardScanner from './components/CardScanner'
 import SeatLayout from './components/SeatLayout'
 import ConferenceLayout from './components/ConferenceLayout'
+import StatisticsPanel from './components/StatisticsPanel'
 import { checkFaceScanAttendance, saveFaceScanToFirestore, loadAllFaceScansFromFirestore, subscribeToFaceScans, deleteFaceScanFromFirestore, markNotificationAsShown } from './firebase/faceScans'
 import './App.css'
 
@@ -342,8 +343,12 @@ function App() {
   return (
     <div className="app">
       <header className="app-header">
-        <h1>Hội Nghị Công Đoàn - Điểm Danh</h1>
+        <h1>HỘI NGHỊ ĐẠI BIỂU VIÊN CHỨC NGƯỜI LAO ĐỘNG NĂM 2025</h1>
         <div className="header-actions">
+          <StatisticsPanel 
+            attendanceList={attendanceList}
+            scannedCards={scannedCards}
+          />
           <ExcelUploader onUpload={handleExcelUpload} />
           <button className="logout-button" onClick={handleLogout} title="Đăng xuất">
             🚪 Đăng xuất

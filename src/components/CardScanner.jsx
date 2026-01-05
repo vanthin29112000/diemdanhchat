@@ -102,7 +102,7 @@ function CardScanner({ onScan, scannedCards, onRemove, onClearAll, newScanFromFi
           <div className="current-person-card animate-success">
             <div className="success-header">
               <div className="success-icon">✓</div>
-              <h3>Điểm danh thành công</h3>
+              <h3>Lấy chỗ thành công</h3>
             </div>
             <div className="person-avatar">
               {currentPerson.image ? (
@@ -155,7 +155,7 @@ function CardScanner({ onScan, scannedCards, onRemove, onClearAll, newScanFromFi
 
       <div className="scanned-list-section">
         <div className="scanned-list-header">
-          <h2>Danh sách đã quét ({scannedCards.length})</h2>
+          <h2>DS đại biểu đã lấy chỗ ({scannedCards.length})</h2>
         </div>
         <div className="scanned-list">
           {scannedCards.length === 0 ? (
