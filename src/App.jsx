@@ -5,6 +5,7 @@ import CardScanner from './components/CardScanner'
 import SeatLayout from './components/SeatLayout'
 import ConferenceLayout from './components/ConferenceLayout'
 import StatisticsPanel from './components/StatisticsPanel'
+import PhongBanDistributionPopup from './components/PhongBanDistributionPopup'
 import { checkFaceScanAttendance, saveFaceScanToFirestore, loadAllFaceScansFromFirestore, subscribeToFaceScans, deleteFaceScanFromFirestore, markNotificationAsShown } from './firebase/faceScans'
 import './App.css'
 
@@ -345,6 +346,10 @@ function App() {
       <header className="app-header">
         <h1>HỘI NGHỊ ĐẠI BIỂU VIÊN CHỨC NGƯỜI LAO ĐỘNG NĂM 2025</h1>
         <div className="header-actions">
+          <PhongBanDistributionPopup 
+            attendanceList={attendanceList}
+            scannedCards={scannedCards}
+          />
           <StatisticsPanel 
             attendanceList={attendanceList}
             scannedCards={scannedCards}
